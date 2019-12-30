@@ -1,13 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Text,
   Stack,
-  Persona,
-  PersonaSize,
   DetailsList,
-  IDetailsRowProps,
   IColumn,
-  Icon,
   ActionButton
 } from "office-ui-fabric-react";
 
@@ -39,6 +35,7 @@ export const ScoreBoard = (props: ScoreBoardProps) => {
       name: "Name",
       fieldName: "name",
       minWidth: 50,
+      maxWidth:150,
       onRender: (item: any) => (
         <Stack horizontal verticalFill verticalAlign="center">
           <ActionButton
@@ -57,11 +54,12 @@ export const ScoreBoard = (props: ScoreBoardProps) => {
       onRender: (item: any) => (
         <Stack
           horizontal
-          tokens={{ childrenGap: 5 }}
+          tokens={{ childrenGap: 2 }}
+          horizontalAlign="start"
           verticalAlign="center"
           verticalFill
         >
-          <Text>{item.coins}( {item.subtractedCoins} )</Text>
+          <Text>{item.coins} ( {item.subtractedCoins} )</Text>
           <ActionButton
             iconProps={{ iconName: "BoxSubtractSolid" }}
             onClick={_ => onSubtract(item.name)}
@@ -90,7 +88,7 @@ export const ScoreBoard = (props: ScoreBoardProps) => {
     }
   ];
 
-  return <DetailsList items={players} columns={columns} selectionMode={0} />;
+  return <DetailsList isHeaderVisible={false} items={players} columns={columns} selectionMode={0} />;
 };
 
 // <Stack

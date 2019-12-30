@@ -1,17 +1,11 @@
 import React, { useState } from "react";
 import {
-  Text,
-  Stack,
-  Persona,
-  PersonaSize,
   DetailsList,
-  IDetailsRowProps,
   IColumn,
-  Icon,
-  ActionButton
+  Text,
 } from "office-ui-fabric-react";
 import { Player } from "./ScoreBoard";
-import { HistoryItem } from "./Game";
+import { HistoryItem } from "./Header";
 
 
 export type HistoryModalTableProps = {
@@ -30,5 +24,5 @@ export const HistoryModalTable = (props: HistoryModalTableProps) => {
         minWidth: 100,
   }))
 
-  return <DetailsList items={playersHistory} columns={columns} selectionMode={0} />;
+  return playersHistory.length? <DetailsList items={playersHistory} columns={columns} selectionMode={0} />:<Text style={{textAlign:"center", fontWeight:"bold"}} variant="large"> There is no history created yet!</Text>;
 };

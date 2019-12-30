@@ -1,41 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
-  Text,
   Stack,
-  DefaultButton,
-  TextField,
   Separator,
-  Modal,
-  ActionButton,
-  DetailsList
 } from "office-ui-fabric-react";
 import { Player, ScoreBoard } from "./ScoreBoard";
-import { HistoryModalTable } from "./HistoryModalTable";
+import { Header, HistoryItem } from "./Header";
 
-
-export type HistoryItem =  {[key: string]: number}
 const startingCoins = 100000;
 export const Game: React.FC = () => {
   const [players, setPlayers] = useState<Player[]>([]);
   const [totalRoundCoins, setTotalRoundCoins] = useState<number>(0);
   const [baseCoins, setBaseCoins] = useState<number>(1000);
-  const [addPlayerValue, setAddPlayerValue] = useState("");
   const [allInCoins, setAllInCoins] = useState<number>(9000);
   const [roundNumber, setRoundNumber] = useState<number>(1);
-  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState<boolean>(false);
-  const [historyItems, setHistoryItems] = useState<HistoryItem[]>([])
+  const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
 
-  const onAddPlayer = () => {
+  const onAddPlayer = (name:string) => {
     setPlayers(players =>
       players.concat({
-        name: addPlayerValue,
+        name: name,
         coins: startingCoins,
         isAllInClicked: false,
         subtractedCoins: 0,
         history: []
       })
     );
-    setAddPlayerValue("");
   };
 
   const onDelete = (name: String) => {
@@ -99,13 +88,13 @@ export const Game: React.FC = () => {
       }))
     );
     const updatedHistory = historyItems.slice();
-    const historyObject: HistoryItem= {}
-    players.map(p=>{
-        const key = p.name;
-        historyObject[key] = p.coins;
-    })
+    const historyObject: HistoryItem = {};
+    players.map(p => {
+      const key = p.name;
+      historyObject[key] = p.coins;
+    });
     updatedHistory.push(historyObject);
-    setHistoryItems(updatedHistory)
+    setHistoryItems(updatedHistory);
     setTotalRoundCoins(0);
     setRoundNumber(n => n + 1);
     if (roundNumber % 10 == 0) {
@@ -116,26 +105,16 @@ export const Game: React.FC = () => {
 
   return (
     <>
-      <Text variant="xxLarge">POKER CALCULATOR</Text>
-      <Stack horizontal horizontalAlign="center" tokens={{ childrenGap: 5 }}>
-        <TextField
-          placeholder="Add player"
-          value={addPlayerValue}
-          onChange={(_, v) => setAddPlayerValue(v || "")}
-        ></TextField>
-        <DefaultButton iconProps={{ iconName: "add" }} disabled={!addPlayerValue} onClick={onAddPlayer} />
-      </Stack>
-
-      <Text variant="xxLargePlus">
-        {totalRoundCoins ? totalRoundCoins : "0"}
-      </Text>
-      <Text variant="large">Base: {baseCoins}</Text>
-      <Text variant="large"># Round: {roundNumber}</Text>
-      <TextField
-        placeholder="set all in value"
-        value={allInCoins.toString()}
-        onChange={(_, v) => setAllInCoins(Number(v) || 0)}
-      ></TextField>
+      <Header
+        onAddPlayer={onAddPlayer}
+        setAllInCoins={setAllInCoins}
+        totalRoundCoins={totalRoundCoins}
+        baseCoins={baseCoins}
+        roundNumber={roundNumber}
+        allInCoins={allInCoins}
+        historyItems={historyItems}
+        players={players}
+      />
       <Separator />
 
       <Stack tokens={{ childrenGap: 20 }} style={{ margin: "15px" }}>
@@ -149,13 +128,7 @@ export const Game: React.FC = () => {
         />
       </Stack>
 
-      <ActionButton text="History" onClick={_ => setIsHistoryModalOpen(true)} />
-      <Modal
-        isOpen={isHistoryModalOpen}
-        onDismiss={() => setIsHistoryModalOpen(false)}
-      >
-        <HistoryModalTable players={players} playersHistory={historyItems}></HistoryModalTable>
-      </Modal>
+
     </>
   );
 };
