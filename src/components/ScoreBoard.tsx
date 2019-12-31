@@ -12,7 +12,7 @@ import {
 export type Player = {
   name: string;
   coins: number;
-  subtractedCoins:number;
+  subtractedCoins: number;
   isAllInClicked?: boolean;
   isKing?: boolean;
   isCoze?: boolean;
@@ -29,7 +29,7 @@ export type ScoreBoardProps = {
 };
 
 export const ScoreBoard = (props: ScoreBoardProps) => {
-  const { players, onDelete, onSubtract,onAdd, onAllIn, onPlayerWin } = props;
+  const { players, onDelete, onSubtract, onAdd, onAllIn, onPlayerWin } = props;
 
   const columns: IColumn[] = [
     {
@@ -37,20 +37,42 @@ export const ScoreBoard = (props: ScoreBoardProps) => {
       name: "Name",
       fieldName: "name",
       minWidth: 50,
-      isResizable:true,
+      isResizable: true,
       onRender: (item: Player) => (
-        <Stack horizontal verticalFill horizontalAlign="start" verticalAlign="center" tokens={{childrenGap:5}}>
+        <Stack
+          horizontal
+          verticalFill
+          horizontalAlign="start"
+          verticalAlign="center"
+          tokens={{ childrenGap: 5 }}
+        >
           <ActionButton
             iconProps={{ iconName: "Delete" }}
             onClick={_ => onDelete(item.name)}
           />
-          
-          <Text style={{fontWeight:"bold", color:item.isKing?'gold':item.isCoze?'red':'black'}} variant={item.isKing?"large":"medium"}>
+
+          <Text
+            style={{
+              fontWeight: "bold",
+              color: item.isKing ? "gold" : item.isCoze ? "red" : "black"
+            }}
+            variant={item.isKing ? "large" : "medium"}
+          >
             {item.name}
           </Text>
-            <Separator vertical/>
-          {item.isKing ?<Icon iconName="Crown" style={{color:"gold", fontWeight:'bolder'}}/>:null}
-          {item.isCoze ?<Icon iconName="Cat" style={{color:"red",font:'50px', fontWeight:'bolder'}}/>:null}
+          <Separator vertical />
+          {item.isKing ? (
+            <Icon
+              iconName="Crown"
+              style={{ color: "gold", fontWeight: "bolder" }}
+            />
+          ) : null}
+          {item.isCoze ? (
+            <Icon
+              iconName="Cat"
+              style={{ color: "red", font: "50px", fontWeight: "bolder" }}
+            />
+          ) : null}
         </Stack>
       )
     },
@@ -59,10 +81,12 @@ export const ScoreBoard = (props: ScoreBoardProps) => {
       name: "Coins",
       fieldName: "coins",
       minWidth: 150,
-      isResizable:true,
+      isResizable: true,
       onRender: (item: any) => (
         <Stack verticalFill verticalAlign="center">
-          <Text>{item.coins} ( {item.subtractedCoins} )</Text>
+          <Text>
+            {item.coins} ( {item.subtractedCoins} )
+          </Text>
         </Stack>
       )
     },
@@ -71,7 +95,7 @@ export const ScoreBoard = (props: ScoreBoardProps) => {
       name: "Icons",
       fieldName: "icons",
       minWidth: 150,
-      isResizable:true,
+      isResizable: true,
       onRender: (item: any) => (
         <Stack
           horizontal
@@ -87,7 +111,7 @@ export const ScoreBoard = (props: ScoreBoardProps) => {
           <ActionButton
             iconProps={{ iconName: "BoxAdditionSolid" }}
             onClick={_ => onAdd(item.name)}
-            disabled={item.subtractedCoins>=0}
+            disabled={item.subtractedCoins >= 0}
           />
           <ActionButton
             iconProps={{ iconName: "LightningBolt" }}
@@ -102,11 +126,19 @@ export const ScoreBoard = (props: ScoreBoardProps) => {
             onClick={_ => {
               onPlayerWin(item.name);
             }}
-            disabled={item.subtractedCoins<0}
+            disabled={item.subtractedCoins < 0}
           />
         </Stack>
-      )}
+      )
+    }
   ];
 
-  return <DetailsList isHeaderVisible={false} items={players} columns={columns} selectionMode={0} />;
+  return (
+    <DetailsList
+      isHeaderVisible={false}
+      items={players}
+      columns={columns}
+      selectionMode={0}
+    />
+  );
 };

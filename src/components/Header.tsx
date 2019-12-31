@@ -21,10 +21,12 @@ export type HeaderProps = {
   allInCoins: number;
   players: Player[];
   historyItems: HistoryItem[];
+  startingCoins: number;
   onAddPlayer: (name: string) => void;
   setAllInCoins: (val: number) => void;
+  setStartingCoins: (val: number) => void;
   setBaseCoins: (val: number) => void;
-  onUndoRound: ()=>void;
+  onUndoRound: () => void;
 };
 export const Header = (props: HeaderProps) => {
   const {
@@ -37,7 +39,9 @@ export const Header = (props: HeaderProps) => {
     roundNumber,
     allInCoins,
     players,
-    historyItems
+    historyItems,
+    startingCoins,
+    setStartingCoins
   } = props;
   const [addPlayerValue, setAddPlayerValue] = useState("");
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState<boolean>(false);
@@ -74,18 +78,25 @@ export const Header = (props: HeaderProps) => {
           </Stack>
           <Stack horizontal>
             <TextField
-              label="All in value:"
-              placeholder="set all in value"
+              label="Initial"
+              placeholder="set initial coins"
               style={{ textAlign: "center", maxWidth: "100px" }}
-              value={allInCoins.toString()}
-              onChange={(_, v) => setAllInCoins(Number(v) || 0)}
+              value={startingCoins.toString()}
+              onChange={(_, v) => setStartingCoins(Number(v) || 0)}
             />
             <TextField
-              label="Base coins:"
+              label="Base"
               placeholder="set base coins"
               style={{ textAlign: "center", maxWidth: "100px" }}
               value={baseCoins.toString()}
               onChange={(_, v) => setBaseCoins(Number(v) || 0)}
+            />
+            <TextField
+              label="All in"
+              placeholder="set all in value"
+              style={{ textAlign: "center", maxWidth: "100px" }}
+              value={allInCoins.toString()}
+              onChange={(_, v) => setAllInCoins(Number(v) || 0)}
             />
           </Stack>
         </Stack>
@@ -98,14 +109,18 @@ export const Header = (props: HeaderProps) => {
           >
             POKER CALCULATOR
           </Text>
-          <Stack
-          horizontal
-          horizontalAlign="center"
-          >
-            
-          <ActionButton iconProps={{iconName:"ClipboardListMirrored"}} text="History"  onClick={_ => setIsHistoryModalOpen(true)} />
-          <ActionButton iconProps={{iconName:'Undo'}} text="Undo round" disabled={roundNumber===1} onClick={onUndoRound}/>
-          
+          <Stack horizontal horizontalAlign="center">
+            <ActionButton
+              iconProps={{ iconName: "ClipboardListMirrored" }}
+              text="History"
+              onClick={_ => setIsHistoryModalOpen(true)}
+            />
+            <ActionButton
+              iconProps={{ iconName: "Undo" }}
+              text="Undo round"
+              disabled={roundNumber === 1}
+              onClick={onUndoRound}
+            />
           </Stack>
           <Modal
             isOpen={isHistoryModalOpen}
@@ -136,26 +151,35 @@ export const Header = (props: HeaderProps) => {
               }}
               variant="medium"
             >
-              {players.find(p=>p.isKing)?.name}
-            <Icon
-              iconName="Crown"
-              style={{ color: "gold",marginLeft:'5px', fontWeight: "bolder" }}
-            />
+              {players.find(p => p.isKing)?.name}
+              <Icon
+                iconName="Crown"
+                style={{
+                  color: "gold",
+                  marginLeft: "5px",
+                  fontWeight: "bolder"
+                }}
+              />
             </Text>
-              <Separator/>
+            <Separator />
             <Text
               style={{
                 fontWeight: "bold",
                 color: "red"
               }}
-              variant= "medium"
+              variant="medium"
             >
-              {players.find(p=>p.isCoze)?.name}
-            <Icon
+              {players.find(p => p.isCoze)?.name}
+              <Icon
                 iconName="Cat"
-                style={{ color: "red",marginLeft:'5px', font: "50px", fontWeight: "bolder" }}    />
+                style={{
+                  color: "red",
+                  marginLeft: "5px",
+                  font: "50px",
+                  fontWeight: "bolder"
+                }}
+              />
             </Text>
-
           </Stack>
         </Stack>
       </Stack>
