@@ -22,7 +22,9 @@ export const Game: React.FC = () => {
         coins: startingCoins,
         isAllInClicked: false,
         subtractedCoins: 0,
-        history: []
+        history: [],
+        isKing: false,
+        isCoze: false
       })
     );
   };
@@ -58,37 +60,58 @@ export const Game: React.FC = () => {
     setPlayers(updatedPlayers);
     setTotalRoundCoins(val => val - baseCoins);
   };
+
+  const onUndoRound = () => {
+    if(roundNumber===1){
+      return
+    }
+    setRoundNumber(n=>n-1);
+    const updatedPlayers = players.map(p=>({...p, history: p.history.slice(0,-1), subtractedCoins: 0}));
+    setPlayers(updatedPlayers)
+    setHistoryItems(items=>items.slice(0,-1))
+  }
+
   const onAllIn = (name: string) => {
     const updatedPlayers = players.slice();
     const newPlayer = updatedPlayers.find(p => p.name === name);
     if (newPlayer) {
-      newPlayer.coins -= allInCoins;
+      if(newPlayer.coins<allInCoins){
+        newPlayer.subtractedCoins -= newPlayer.coins;
+        setTotalRoundCoins(val => val + newPlayer.coins);
+        newPlayer.coins = 0;
+      }else{
+        newPlayer.coins -= allInCoins;
+        newPlayer.subtractedCoins -= allInCoins;
+        setTotalRoundCoins(val => val + allInCoins);
+      }
       newPlayer.isAllInClicked = true;
-      newPlayer.subtractedCoins -= allInCoins;
     }
     setPlayers(updatedPlayers);
-    setTotalRoundCoins(val => val + allInCoins);
   };
 
   const onPlayerWin = (name: string) => {
     const updatedPlayers = players.slice();
-    const newPlayer = updatedPlayers.find(p => p.name === name);
-    if (newPlayer) {
-      newPlayer.coins += totalRoundCoins;
+    const player = updatedPlayers.find(p => p.name === name);
+    if (player) {
+      player.coins += totalRoundCoins;
     }
+    const highestCoinValue = players.reduce((acc, player) => acc = acc > player.coins ? acc : player.coins, 0);
+    const lowestCoinValue = players.reduce((acc, player) => acc = acc < player.coins ? acc : player.coins, Infinity);
     setPlayers(
       updatedPlayers.map(p => ({
         ...p,
         history:
-          p.name === name
-            ? [...p.history, totalRoundCoins]
-            : [...p.history, p.subtractedCoins],
+        p.name === name
+        ? [...p.history, totalRoundCoins]
+        : [...p.history, p.subtractedCoins],
         subtractedCoins: 0,
-        isAllInClicked: false
+        isAllInClicked: false,
+        isKing: p.coins===highestCoinValue,
+        isCoze: p.coins===lowestCoinValue
       }))
-    );
-    const updatedHistory = historyItems.slice();
-    const historyObject: HistoryItem = {};
+      );
+      const updatedHistory = historyItems.slice();
+      const historyObject: HistoryItem = {};
     players.map(p => {
       const key = p.name;
       historyObject[key] = p.coins;
@@ -107,12 +130,14 @@ export const Game: React.FC = () => {
     <>
       <Header
         onAddPlayer={onAddPlayer}
+        onUndoRound={onUndoRound}
         setAllInCoins={setAllInCoins}
         totalRoundCoins={totalRoundCoins}
         baseCoins={baseCoins}
         roundNumber={roundNumber}
         allInCoins={allInCoins}
         historyItems={historyItems}
+        setBaseCoins={setBaseCoins}
         players={players}
       />
       <Separator />

@@ -22,6 +22,7 @@ export const HistoryModalTable = (props: HistoryModalTableProps) => {
         name: p.name,
         fieldName: p.name,
         minWidth: 100,
+        isResizable:true
   }))
 
   return playersHistory.length? <DetailsList items={playersHistory} columns={columns} selectionMode={0} />:<Text style={{textAlign:"center", fontWeight:"bold"}} variant="large"> There is no history created yet!</Text>;

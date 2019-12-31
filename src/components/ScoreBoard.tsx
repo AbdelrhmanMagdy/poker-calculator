@@ -4,7 +4,9 @@ import {
   Stack,
   DetailsList,
   IColumn,
-  ActionButton
+  ActionButton,
+  Icon,
+  Separator
 } from "office-ui-fabric-react";
 
 export type Player = {
@@ -35,14 +37,20 @@ export const ScoreBoard = (props: ScoreBoardProps) => {
       name: "Name",
       fieldName: "name",
       minWidth: 50,
-      maxWidth:150,
-      onRender: (item: any) => (
-        <Stack horizontal verticalFill verticalAlign="center">
+      isResizable:true,
+      onRender: (item: Player) => (
+        <Stack horizontal verticalFill horizontalAlign="start" verticalAlign="center" tokens={{childrenGap:5}}>
           <ActionButton
             iconProps={{ iconName: "Delete" }}
             onClick={_ => onDelete(item.name)}
           />
-          <Text>{item.name}</Text>
+          
+          <Text style={{fontWeight:"bold", color:item.isKing?'gold':item.isCoze?'red':'black'}} variant={item.isKing?"large":"medium"}>
+            {item.name}
+          </Text>
+            <Separator vertical/>
+          {item.isKing ?<Icon iconName="Crown" style={{color:"gold", fontWeight:'bolder'}}/>:null}
+          {item.isCoze ?<Icon iconName="Cat" style={{color:"red",font:'50px', fontWeight:'bolder'}}/>:null}
         </Stack>
       )
     },
@@ -50,7 +58,20 @@ export const ScoreBoard = (props: ScoreBoardProps) => {
       key: "coin",
       name: "Coins",
       fieldName: "coins",
-      minWidth: 250,
+      minWidth: 150,
+      isResizable:true,
+      onRender: (item: any) => (
+        <Stack verticalFill verticalAlign="center">
+          <Text>{item.coins} ( {item.subtractedCoins} )</Text>
+        </Stack>
+      )
+    },
+    {
+      key: "icons",
+      name: "Icons",
+      fieldName: "icons",
+      minWidth: 150,
+      isResizable:true,
       onRender: (item: any) => (
         <Stack
           horizontal
@@ -59,7 +80,6 @@ export const ScoreBoard = (props: ScoreBoardProps) => {
           verticalAlign="center"
           verticalFill
         >
-          <Text>{item.coins} ( {item.subtractedCoins} )</Text>
           <ActionButton
             iconProps={{ iconName: "BoxSubtractSolid" }}
             onClick={_ => onSubtract(item.name)}
@@ -82,21 +102,11 @@ export const ScoreBoard = (props: ScoreBoardProps) => {
             onClick={_ => {
               onPlayerWin(item.name);
             }}
+            disabled={item.subtractedCoins<0}
           />
         </Stack>
-      )
-    }
+      )}
   ];
 
   return <DetailsList isHeaderVisible={false} items={players} columns={columns} selectionMode={0} />;
 };
-
-// <Stack
-//   horizontal
-//   verticalAlign="center"
-//   verticalFill
-//   tokens={{ childrenGap: 5 }}
-// >
-//   <Persona text={name} size={PersonaSize.size56} />
-//   <Text variant="medium">{coins}</Text>
-// </Stack>
