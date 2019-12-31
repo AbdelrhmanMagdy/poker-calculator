@@ -137,7 +137,6 @@ export const Header = (props: HeaderProps) => {
               variant="medium"
             >
               {players.find(p=>p.isKing)?.name}
-
             <Icon
               iconName="Crown"
               style={{ color: "gold",marginLeft:'5px', fontWeight: "bolder" }}
@@ -151,7 +150,7 @@ export const Header = (props: HeaderProps) => {
               }}
               variant= "medium"
             >
-              {players.find(p=>p.isKing)?.name}
+              {players.find(p=>p.isCoze)?.name}
             <Icon
                 iconName="Cat"
                 style={{ color: "red",marginLeft:'5px', font: "50px", fontWeight: "bolder" }}    />
