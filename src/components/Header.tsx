@@ -23,8 +23,9 @@ export type HeaderProps = {
   historyItems: HistoryItem[];
   startingCoins: number;
   onAddPlayer: (name: string) => void;
+  loadLastGame: () => void;
   setAllInCoins: (val: number) => void;
-  setStartingCoins: (val: number) => void;
+  setStartingCoins: (val:number)=>void;
   setBaseCoins: (val: number) => void;
   onUndoRound: () => void;
 };
@@ -41,7 +42,8 @@ export const Header = (props: HeaderProps) => {
     players,
     historyItems,
     startingCoins,
-    setStartingCoins
+    setStartingCoins,
+    loadLastGame
   } = props;
   const [addPlayerValue, setAddPlayerValue] = useState("");
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState<boolean>(false);
@@ -91,14 +93,14 @@ export const Header = (props: HeaderProps) => {
               value={baseCoins.toString()}
               onChange={(_, v) => setBaseCoins(Number(v) || 0)}
             />
-            <TextField
-              label="All in"
-              placeholder="set all in value"
-              style={{ textAlign: "center", maxWidth: "100px" }}
-              value={allInCoins.toString()}
-              onChange={(_, v) => setAllInCoins(Number(v) || 0)}
+          <TextField
+            label="All in"
+            placeholder="set all in value"
+            style={{ textAlign: "center", maxWidth: "100px" }}
+            value={allInCoins.toString()}
+            onChange={(_, v) => setAllInCoins(Number(v) || 0)}
             />
-          </Stack>
+            </Stack>
         </Stack>
 
         <Stack verticalFill verticalAlign="end" tokens={{ childrenGap: 5 }}>
@@ -110,6 +112,11 @@ export const Header = (props: HeaderProps) => {
             POKER CALCULATOR
           </Text>
           <Stack horizontal horizontalAlign="center">
+          <ActionButton
+              iconProps={{ iconName: "Save" }}
+              text="Load Game"
+              onClick={_ => loadLastGame()}
+            />
             <ActionButton
               iconProps={{ iconName: "ClipboardListMirrored" }}
               text="History"

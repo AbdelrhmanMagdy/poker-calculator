@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Stack, Separator } from "office-ui-fabric-react";
 import { Player, ScoreBoard } from "./ScoreBoard";
 import { Header, HistoryItem } from "./Header";
@@ -11,6 +11,40 @@ export const Game: React.FC = () => {
   const [allInCoins, setAllInCoins] = useState<number>(9000);
   const [roundNumber, setRoundNumber] = useState<number>(1);
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "Game",
+      JSON.stringify({
+        players,
+        totalRoundCoins,
+        baseCoins,
+        startingCoins,
+        allInCoins,
+        roundNumber,
+        historyItems
+      })
+    );
+  }, [
+    players,
+    totalRoundCoins,
+    baseCoins,
+    startingCoins,
+    allInCoins,
+    roundNumber,
+    historyItems
+  ]);
+
+  const loadGame = () => {
+    const game = JSON.parse(localStorage.getItem("Game") || "");
+    setPlayers(game.players);
+    setTotalRoundCoins(game.totalRoundCoins);
+    setBaseCoins(game.baseCoins);
+    setStartingCoins(game.startingCoins);
+    setAllInCoins(game.allInCoins);
+    setRoundNumber(game.roundNumber);
+    setHistoryItems(game.historyItems);
+  };
 
   const onAddPlayer = (name: string) => {
     setPlayers(players =>
@@ -147,6 +181,7 @@ export const Game: React.FC = () => {
         allInCoins={allInCoins}
         historyItems={historyItems}
         setBaseCoins={setBaseCoins}
+        loadLastGame={loadGame}
         players={players}
       />
       <Separator />
